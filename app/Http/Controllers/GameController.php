@@ -49,12 +49,12 @@ class GameController extends Controller
 
     public function index() 
     {
-        return view("games/list",["games"=>$this->games]);
+        return view("games.list",["games"=>$this->games]);
     }
 
     
     public function detail(int $id)
     {
-        return view("games/detail",["game"=>$this->games[$id]]);
+        return view("games.detail",["game"=>$this->games[$id]]);
     }
 }
