@@ -3,13 +3,20 @@
     Jogos
 @endsection('title')
 
+@section('header')
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid justify-content-center">
+        <a class="navbar-brand" href="{{ route('game-list')}}">Jogos</a>
+    </div>
+    </nav>
+@endsection('header')
+
 @section('content')
-<h1>Jogos</h1>
-<?php foreach($games as $key => $game ):?>
-    <h4>
-            <a href="{{ route('game-detail', ['id' => $key]) }}">
-                {{ $game['nome'] }}
-            </a>    
-        </h4>
-        <?php endforeach; ?>
+    <div >
+    @foreach($games as $game)
+        <a class="list-group-item list-group-item-action" href="{{ route('game-detail', ['id' => $game['id']]) }}">
+            {{ $game['name'] }}
+        </a>    
+    @endforeach
+    </div>
 @endsection('content')
