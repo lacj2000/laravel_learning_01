@@ -13,38 +13,7 @@ class GameController extends Controller
 
     public function  __construct()
     {
-        // $this->games = array(
-        //     array(
-        //         'nome' => 'Counter-Strike: Global Offensive 2',
-        //         'sigla' => 'cs2',
-        //         'descricao' => '<b> A tão aguardada sequência do popular jogo de tiro em primeira pessoa</b>, trazendo novos mapas, modos de jogo e gráficos aprimorados.',
-        //         'ano_lancamento' => 2023
-        //     ),
-        //     array(
-        //         'nome' => 'FIFA 2024',
-        //         'sigla' => 'fifa 24',
-        //         'descricao' => 'A mais recente edição da aclamada série de simulação de futebol, apresentando jogabilidade aprimorada, gráficos realistas e novos recursos de modo carreira.',
-        //         'ano_lancamento' => 2024
-        //     ),
-        //     array(
-        //         'nome' => 'The Legend of Zelda: Breath of the Wild 2',
-        //         'sigla' => 'Breath of the Wild 2',
-        //         'descricao' => 'A continuação do épico jogo de aventura, trazendo um vasto mundo aberto para explorar, novos quebra-cabeças e uma história envolvente.',
-        //         'ano_lancamento' => 2023
-        //     ),
-        //     array(
-        //         'nome' => 'Assassin\'s Creed: Ragnarok',
-        //         'sigla' => 'Assassin\'s Creed: Ragnarok',
-        //         'descricao' => 'Na era dos vikings, você embarcará em uma jornada épica como um assassino, desvendando segredos e conspirações em um mundo aberto deslumbrante.',
-        //         'ano_lancamento' => 2024
-        //     ),
-        //     array(
-        //         'nome' => 'Cyberpunk 2078',
-        //         'sigla' => 'Cyberpunk 2078',
-        //         'descricao' => 'Um RPG de ação ambientado em um futuro distópico, onde megacorporações controlam a sociedade. Explore a cidade de Night City e faça escolhas que afetam o desenrolar da história.',
-        //         'ano_lancamento' => 2022
-        //     ),
-        // );
+      
     }
 
 
@@ -52,13 +21,63 @@ class GameController extends Controller
     {   
         $games = Game::all();
         // dd($games);
-        return view("games.list",["games"=>$games]);
+        return view('games.index',['games'=>$games]);
     }
 
     
-    public function detail(int $id)
+    public function show(int $id)
     {
-        $game = Game::findOrFail($id);
-        return view("games.detail",["game"=>$game]);
+        $game = Game::where('id', $id)->first();
+        if(!empty($game)){
+            return view('games.show',['game'=>$game]);
+        }else{
+            return redirect()->route('games-index');
+        }
+    }
+
+    public function create()
+    {
+        return view('games.create');
+    }
+
+    public function store(Request $request)
+    {
+        // dd($request);
+        Game::create($request->all());
+        return redirect()->route('games-index');
+    }
+
+    public function edit(int $id)
+    {
+        $game = Game::where('id', $id)->first();
+        if(!empty($game)){
+            // dd($game);
+            return view('games.edit', ['game'=>$game]);
+        }else{
+            return redirect()->route('games-index');
+        }
+    }
+
+    public function update(Request $request, $id)
+    {   
+        $data = [
+            'name'=> $request->name,
+            'acronym'=> $request->acronym,
+            'category'=> $request->category,
+            'description'=> $request->description,
+            'creation_year'=> $request->creation_year,
+            'value'=> $request->value,
+        ];
+
+        Game::where('id', $id)->first()->update($data);
+
+        return redirect()->route('games-show',[$id]);
+        
+    }
+
+    public function destroy(int $id)
+    {
+        Game::where('id', $id)->first()->delete();
+        return redirect()->route('games-index');
     }
 }
